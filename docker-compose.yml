@@ -1,38 +1,58 @@
+# Neuste Docker-Compose Version verwenden
 version: "3.8"
+
+# Definition der Services
 services:
+  
+  # Konfiguration des Frontend Services
   web:
+    # Build-Verzeichnis des Frontend Services
     build: ./frontend
+    # Abhängigkeit zum API Service
     depends_on:
       - api
+    # Port des Frontend Services
     ports:
       - "3000:3000"
+    # Verwendung des Backend Netzwerks
     networks:
       - network-backend
+
+  # Konfiguration des API Services
   api:
+    # Build-Verzeichnis des Backend Services
     build: ./backend
+    # Abhängigkeit zum MongoDB Service
     depends_on:
       - mongo
+    # Port des API Services
     ports:
       - "3001:3001"
+    # Verwendung des Backend Netzwerks
     networks: 
      - network-backend
-  
+
+  # Konfiguration des MongoDB Services
   mongo:
+    # Verwendung des offiziellen MongoDB Images
     image: mongo
+    # Immer neustarten des Containers
     restart: always
+    # Verwendung des MongoDB Volumes
     volumes: 
       - mongodb_data:/data/db
+    # Konfiguration der MongoDB Umgebungsvariablen
     environment: 
       MONGODB_INITDB_ROOT_USERNAME: username
       MONGODB_INITDB_ROOT_PASSWORD: password
-    # uncomment following lines to access db locally
-    # ports:
-    #   - 27017:27017
+    # Verwendung des Backend Netzwerks
     networks: 
      - network-backend
 
+# Definition des Backend Netzwerks
 networks:
   network-backend:
 
+# Definition des MongoDB Volumes
 volumes: 
   mongodb_data:
